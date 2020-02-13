@@ -18,6 +18,7 @@ from anki import version as anki_version
 
 from aqt.qt import *
 from aqt import mw
+from .config import getUserOption
 
 __version__ = '1.3.0'
 
@@ -26,39 +27,45 @@ __version__ = '1.3.0'
 # CARD TALLY CALCULATION
 
 # Which queues to include in the progress calculation (all True by default)
-includeNew = False
-includeRev = True
-includeLrn = True
+includeNew = getUserOption("IncludeNew")
+includeRev = getUserOption("IncludeRev")
+includeLrn = getUserOption("IncludeLrn")
 
 # Only include new cards once reviews are exhausted.
-includeNewAfterRevs = True
+includeNewAfterRevs = getUserOption("IncludeNewAfterRevs")
 
 # Limit count to your review settings as opposed to deck overall
-limitToReviewSettings = True
+limitToReviewSettings = getUserOption("LimitToReviewSettings")
 
 # PROGRESS BAR APPEARANCE
 
-showPercent = False # Show the progress text percentage or not.
-showNumber = False # Show the progress text as a fraction
+showPercent = getUserOption("ShowPercent") # Show the progress text percentage or not.
+showNumber = getUserOption("ShowNumber") # Show the progress text as a fraction
 
 
-qtxt = "aliceblue" # Percentage color, if text visible.
-qbg = "#2f2f31" # Background color of progress bar.
-qfg = "Navy" # Foreground color of progress bar.
-qbr = 1 # Border radius (> 0 for rounded corners).
+qtxt = getUserOption("Text Color") # Percentage color, if text visible.
+qbg = getUserOption("Background Color") # Background color of progress bar.
+qfg = getUserOption("Foreground Color") # Foreground color of progress bar.
+qbr = getUserOption("Border Radius") # Border radius (> 0 for rounded corners).
 
 # optionally restricts progress bar width
-maxWidth = ""  # (e.g. "2px". default: "")
+maxWidth = getUserOption("MaxWidth")  # (e.g. "2px". default: "")
 
-orientationHV = Qt.Horizontal # Show bar horizontally (side to side). Use with top/bottom dockArea.
-# orientationHV = Qt.Vertical # Show bar vertically (up and down). Use with right/left dockArea.
+if getUserOption("Horizontal", True):
+    orientationHV = Qt.Horizontal # Show bar horizontally (side to side). Use with top/bottom dockArea.
+else:
+    orientationHV = Qt.Vertical # Show bar vertically (up and down). Use with right/left dockArea.
 
-invertTF = False # If set to True, inverts and goes from right to left or top to bottom.
+invertTF = getUserOption("Invert") # If set to True, inverts and goes from right to left or top to bottom.
 
-dockArea = Qt.BottomDockWidgetArea # Shows bar at the top. Use with horizontal orientation.
-#dockArea = Qt.BottomDockWidgetArea # Shows bar at the bottom. Use with horizontal orientation.
-#dockArea = Qt.RightDockWidgetArea # Shows bar at right. Use with vertical orientation.
-#dockArea = Qt.LeftDockWidgetArea # Shows bar at left. Use with vertical orientation.
+if getUserOption("Dock Area") == "bottom":
+    dockArea = Qt.BottomDockWidgetArea # Shows bar at the bottom. Use with horizontal orientation.
+elif getUserOption("Dock Area") == "top": 
+    dockArea = Qt.TopDockWidgetArea # Shows bar at the top. Use with horizontal orientation.
+elif getUserOption("Dock Area") == "right": 
+    dockArea = Qt.RightDockWidgetArea # Shows bar at right. Use with vertical orientation.
+elif getUserOption("Dock Area") == "left": 
+    dockArea = Qt.LeftDockWidgetArea # Shows bar at left. Use with vertical orientation.
 
 pbStyle = "" # Stylesheet used only if blank. Else uses QPalette + theme style.
 '''pbStyle options (insert a quoted word above):
